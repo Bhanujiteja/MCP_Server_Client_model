@@ -4,6 +4,9 @@ import uvicorn
 import asyncio
 import os
 
+from dotenv import load_dotenv
+load_dotenv()
+
 from mcp import ClientSession, StdioServerParameters
 from mcp.client.stdio import stdio_client
 from langchain_mcp_adapters.tools import load_mcp_tools
@@ -11,8 +14,7 @@ from langgraph.prebuilt import create_react_agent
 from langchain_groq import ChatGroq
 
 # Setup environment
-GROQ_API_KEY = "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"
-os.environ["GROQ_API_KEY"] = GROQ_API_KEY
+GROQ_API_KEY = os.environ["GROQ_API_KEY"]
 
 # LangChain model
 model = ChatGroq(model="llama3-8b-8192", temperature=0)
@@ -49,7 +51,7 @@ async def home():
 
 @app.post("/", response_class=HTMLResponse)
 async def handle_query(query: str = Form(...)):
-    async with agent_lock:  # Prevent overlapping agent sessions
+    async with agent_lock:
         try:
             async with stdio_client(server_params) as (read, write):
                 async with ClientSession(read, write) as session:
