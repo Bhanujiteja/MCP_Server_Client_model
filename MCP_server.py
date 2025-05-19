@@ -1,6 +1,11 @@
 import math
 import requests
 from mcp.server.fastmcp import FastMCP
+from dotenv import load_dotenv
+import os
+
+# Load environment variables from .env
+load_dotenv()
 
 mcp = FastMCP("Math")
 
@@ -16,7 +21,8 @@ def multiply(a: int, b: int) -> int:
 def sine(a: int) -> float:
     return math.sin(a)
 
-WEATHER_API_KEY = "3eb492a34cd8482fb8c120039251705"
+# Get the API key from the environment variable
+WEATHER_API_KEY = os.getenv("WEATHER_API_KEY")
 
 @mcp.tool()
 def get_weather(city: str) -> dict:
